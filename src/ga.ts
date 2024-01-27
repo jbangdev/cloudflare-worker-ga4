@@ -1,6 +1,13 @@
+import { v4 } from "uuid";
+import { UAParser } from "ua-parser-js";
+
 import { Env } from "./external";
 
-import { v4 } from "uuid";
+
+function getDeviceType(userAgent: string): string {
+  const ua = new UAParser(userAgent)
+  return ua.getDevice().type || 'NA';
+}
 
 
 export async function sendToGA(request: Request, env: Env) {
@@ -21,10 +28,11 @@ export async function sendToGA(request: Request, env: Env) {
 			{
 				name: 'pageview',
 				landingPage: request.url.trim(),
-				firstUserSource: headers.get('referrer') || '',
+				firstUserSource: headers.get('referrer') || 'NA',
 				firstUserMedium: 'referral',
-				deviceCategory: '',
-				countryId: cf !== undefined ? cf.country : '',
+				deviceCategory: getDeviceType(headers.get('user-agent') || ''),
+				countryId: cf !== undefined ? cf.country : 'NA',
+        continentId: cf !== undefined? cf.continent : 'NA',
 			}
 		]
 	};
