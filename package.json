@@ -4,7 +4,7 @@
   "scripts": {
     "login": "wrangler login",
     "logout": "wrangler logout",
-    "deploy": "wrangler deploy",
+    "deploy": "wrangler deploy --keep-vars true",
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist"
@@ -17,7 +17,6 @@
     "wrangler": "^3.0.0"
   },
   "dependencies": {
-    "ua-parser-js": "^1.0.37",
     "uuid": "^9.0.1"
   }
 }

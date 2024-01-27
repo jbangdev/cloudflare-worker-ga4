@@ -1,13 +1,6 @@
 import { v4 } from "uuid";
-import { UAParser } from "ua-parser-js";
 
 import { Env } from "./external";
-
-
-function getDeviceType(userAgent: string): string {
-  const ua = new UAParser(userAgent)
-  return ua.getDevice().type || 'NA';
-}
 
 
 export async function sendToGA(request: Request, env: Env) {
@@ -24,15 +17,32 @@ export async function sendToGA(request: Request, env: Env) {
 	// https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema
 	const payload = {
 		client_id: v4(),
+    non_personalized_ads: true,
+    user_properties: {
+      language: {
+        value: headers.get('accept-language')
+      },
+      country: {
+        value: cf !== undefined ? cf.country : 'NA'
+      },
+      city: {
+        value: cf !== undefined ? cf.city : 'NA'
+      },
+      continent: {
+        value: cf !== undefined ? cf.continent : 'NA'
+      }
+    },
 		events: [
 			{
-				name: 'pageview',
-				landingPage: request.url.trim(),
-				firstUserSource: headers.get('referrer') || 'NA',
-				firstUserMedium: 'referral',
-				deviceCategory: getDeviceType(headers.get('user-agent') || ''),
-				countryId: cf !== undefined ? cf.country : 'NA',
-        continentId: cf !== undefined? cf.continent : 'NA',
+				name: 'page_view',
+        params: {
+          page_location: request.url.trim(),
+          source: headers.get('referrer') || 'NA',
+          medium: 'referral',
+          user_agent: headers.get('user-agent') || '',
+          ip_override: headers.get('cf-connecting-ip') || headers.get('x-real-ip'),
+          engagement_time_msec: 5,
+        }
 			}
 		]
 	};
