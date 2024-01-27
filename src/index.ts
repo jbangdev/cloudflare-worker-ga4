@@ -1,18 +1,10 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-
-export interface Env {
-}
+import { Env } from "./external";
+import { sendToGA } from "./ga";
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
+		await sendToGA(request.headers, env);
+
+		return Response.redirect(env.APP_REDIRECT_URL, 302);
 	},
 };
