@@ -13,25 +13,28 @@ export async function sendToGA(request: Request, env: Env) {
 
   const mpGAURL=`https://www.google-analytics.com/mp/collect?measurement_id=${env.GA_ID}&api_secret=${env.GA_MP_API_KEY}`;
 
-	// Details about all attributes available at
-	// https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema
+  // Location information is currently not tracked by the Measurement Protocol
+	// https://developers.google.com/analytics/devguides/collection/protocol/ga4#geographic_information
+
+  // The alternative would be to send the location information as part of the event and then create a custom dashboard
+  // that uses these events
 	const payload = {
 		client_id: v4(),
     non_personalized_ads: true,
-    user_properties: {
-      language: {
-        value: headers.get('accept-language')
-      },
-      country: {
-        value: cf !== undefined ? cf.country : 'NA'
-      },
-      city: {
-        value: cf !== undefined ? cf.city : 'NA'
-      },
-      continent: {
-        value: cf !== undefined ? cf.continent : 'NA'
-      }
-    },
+    // user_properties: {
+    //   language: {
+    //     value: headers.get('accept-language')
+    //   },
+    //   country: {
+    //     value: cf !== undefined ? cf.country : 'NA'
+    //   },
+    //   city: {
+    //     value: cf !== undefined ? cf.city : 'NA'
+    //   },
+    //   continent: {
+    //     value: cf !== undefined ? cf.continent : 'NA'
+    //   }
+    // },
 		events: [
 			{
 				name: 'page_view',
@@ -40,6 +43,8 @@ export async function sendToGA(request: Request, env: Env) {
           source: headers.get('referrer') || 'NA',
           medium: 'referral',
           user_agent: headers.get('user-agent') || '',
+          country: cf !== undefined ? cf.country : 'NA',
+          city: cf !== undefined ? cf.city : 'NA',
           ip_override: headers.get('cf-connecting-ip') || headers.get('x-real-ip'),
           engagement_time_msec: 5,
         }
