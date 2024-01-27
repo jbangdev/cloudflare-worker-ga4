@@ -3,8 +3,15 @@ import { Env } from "./external";
 import { v4 } from "uuid";
 
 
-export async function sendToGA(headers: Headers, env: Env) {
-	const mpGAURL=`www.google-analytics.com/mp/collect?measurement_id=${env.GA_ID}&api_secret=${env.GA_MP_API_KEY}`;
+export async function sendToGA(request: Request, env: Env) {
+  const cf = request.cf;
+  const headers = request.headers;
+
+  if (cf === undefined) {
+    console.error('Cloudflare properties are not available');
+  }
+
+  const mpGAURL=`https://www.google-analytics.com/mp/collect?measurement_id=${env.GA_ID}&api_secret=${env.GA_MP_API_KEY}`;
 
 	// Details about all attributes available at
 	// https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema
@@ -13,11 +20,11 @@ export async function sendToGA(headers: Headers, env: Env) {
 		events: [
 			{
 				name: 'pageview',
-				landingPage: '',
-				firstUserSource: '',
-				firstUserMedium: '',
+				landingPage: request.url.trim(),
+				firstUserSource: headers.get('referrer') || '',
+				firstUserMedium: 'referral',
 				deviceCategory: '',
-				countryId: '',
+				countryId: cf !== undefined ? cf.country : '',
 			}
 		]
 	};
@@ -32,6 +39,6 @@ export async function sendToGA(headers: Headers, env: Env) {
 		});
 		console.log(`GA Response: ${(await resp.text())}`);
 	} catch (err) {
-		console.log(`Failed to send data to GA: ${err}`);
+		console.error(`Failed to send data to GA: ${err}`);
 	}
 }
