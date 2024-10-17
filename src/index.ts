@@ -5,6 +5,7 @@ export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
     await sendToGA(request, env);
 
-		return Response.redirect(env.APP_REDIRECT_URL, 302);
+		console.log("tracking ", request.url);
+		return fetch(request);
 	},
 };
