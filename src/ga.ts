@@ -53,6 +53,7 @@ export async function sendToGA(request: Request, env: Env) {
 	};
 
 	try {
+    console.log("Sending to GA", payload);
 		const resp = await fetch(mpGAURL, {
 			method: 'POST',
 			headers: {
