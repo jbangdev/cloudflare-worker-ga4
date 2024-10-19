@@ -112,7 +112,11 @@ export async function sendToAnalytics(request: Request, env: Env) {
 				cfProperties.continent as string,
 				cfProperties.region as string,
 				cfProperties.regionCode as string,
-				cfProperties.timezone as string
+				cfProperties.timezone as string,
+        jbangVersion as string,
+        osInfo as string,
+        javaVersion as string,
+        javaVendor as string
 			],
 			'doubles': [
 				cfProperties.metroCode as number,
@@ -120,11 +124,7 @@ export async function sendToAnalytics(request: Request, env: Env) {
 				cfProperties.latitude as number
 			],
 			'indexes': [
-				cfProperties.postalCode as string,
-        jbangVersion as string,
-        osInfo as string,
-        javaVersion as string,
-        javaVendor as string
+				cfProperties.postalCode as string
 			]
 		})
 		return Promise.resolve()
