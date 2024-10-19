@@ -104,28 +104,32 @@ export async function sendToAnalytics(request: Request, env: Env) {
     javaVendor = uaMatch[4];
    }
 
-		env.ANALYTICS.writeDataPoint({
-			'blobs': [
-				request.url,
-				cfProperties.city as string,
-				cfProperties.country as string,
-				cfProperties.continent as string,
-				cfProperties.region as string,
-				cfProperties.regionCode as string,
-				cfProperties.timezone as string,
-        jbangVersion as string,
-        osInfo as string,
-        javaVersion as string,
-        javaVendor as string
-			],
-			'doubles': [
-				cfProperties.metroCode as number,
-				cfProperties.longitude as number,
-				cfProperties.latitude as number
-			],
-			'indexes': [
-				cfProperties.postalCode as string
-			]
-		})
+   const dataPoint = {
+    'blobs': [
+      request.url,
+      cfProperties.city as string,
+      cfProperties.country as string,
+      cfProperties.continent as string,
+      cfProperties.region as string,
+      cfProperties.regionCode as string,
+      cfProperties.timezone as string,
+      jbangVersion as string,
+      osInfo as string,
+      javaVersion as string,
+      javaVendor as string
+    ],
+    'doubles': [
+      cfProperties.metroCode as number,
+      cfProperties.longitude as number,
+      cfProperties.latitude as number
+    ],
+    'indexes': [
+      cfProperties.postalCode as string
+    ]
+  };
+
+		env.ANALYTICS.writeDataPoint(dataPoint)
+
+    console.log("Sent to Analytics", dataPoint);
 		return Promise.resolve()
 	}
