@@ -52,7 +52,9 @@ export async function sendToAnalytics(request: Request, env: Env) {
             osInfo as string,
             javaVersion as string,
             javaVendor as string,
-            ip as string
+            ip as string,
+            cfProperties.asOrganization as string,
+            ua as string
         ],
         'doubles': [
             cfProperties.metroCode as number,
