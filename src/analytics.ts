@@ -14,7 +14,11 @@ export async function sendToAnalytics(request: Request, env: Env) {
     }
 
     console.log("Cloudflare properties", cfProperties);
-    console.log("Headers", request.headers)
+
+    let headersObject = Object.fromEntries(request.headers);
+    let requestHeaders = JSON.stringify(headersObject, null, 2);
+    console.log(`Request headers: ${requestHeaders}`);
+
 
 
     // parse user agent that should have a format like:
