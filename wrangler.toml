@@ -8,3 +8,4 @@ head_sampling_rate = 1
 
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"
+dataset = "JBANG_METRICS"
