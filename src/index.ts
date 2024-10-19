@@ -1,9 +1,7 @@
 import { Env } from "./external";
-import { sendToGA, sendToAnalytics } from "./ga";
-
+import { sendToGA } from "./ga";
+import { sendToAnalytics } from "./analytics";
 export default {
-
-	
 
 	async fetch(request: Request, env: Env): Promise<Response> {
 		try {
@@ -18,7 +16,7 @@ export default {
 			console.error("Error in sendToAnalytics:", error);
 		}
 
-		console.log("tracking: ", request.url);
+		//console.log("tracking: ", request.url);
 		return fetch(request);
 	},
 };
