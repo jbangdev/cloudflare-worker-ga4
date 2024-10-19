@@ -14,7 +14,7 @@ export async function sendToAnalytics(request: Request, env: Env) {
     }
 
     console.log("Cloudflare properties", cfProperties);
-    console.log("Headers", new Map(request.headers))
+    console.log("Headers", request.headers)
 
 
     // parse user agent that should have a format like:
