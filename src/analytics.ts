@@ -25,21 +25,25 @@ export async function sendToAnalytics(request: Request, env: Env) {
     // JBang/0.117.1 (Linux/5.10.201-191.748.amzn2.x86_64/amd64) Java/17.0.12/Eclipse Adoptium
     const ua = request.headers.get('user-agent') || ''
     // use regex to check if ua is JBang and grab the jbang version, os info and java version with named groups
-    const uaRegex = /JBang\/(\d+\.\d+\.\d+)\s*\(([^)]+)\)\s*Java\/(\d+\.\d+\.\d+)\/(\w+)/;
-    const uaMatch = ua.match(uaRegex);
+    const uaRegex = /JBang\/(?<jbangVersion>\d+\.\d+\.\d+) \((?<osName>[^\/]+)\/(?<osVersion>[^\/]+)\/(?<osArch>[^)]+)\) Java\/(?<javaVersion>\d+\.\d+\.\d+)\/(?<javaVendor>.+)/;
+    const match = ua.match(uaRegex);
 
     var ip = request.headers.get('CF-Connecting-IP') || '';
 
     var jbangVersion = '';
-    var osInfo = '';
+    var osName = '';
+    var osVersion = '';
+    var osArch = '';
     var javaVersion = '';
     var javaVendor = '';
 
-    if (uaMatch) {
-        jbangVersion = uaMatch[1];
-        osInfo = uaMatch[2];
-        javaVersion = uaMatch[3];
-        javaVendor = uaMatch[4];
+    if (match && match.groups) {
+        jbangVersion = match.groups.jbangVersion;
+        osName = match.groups.osName;
+        osVersion = match.groups.osVersion;
+        osArch = match.groups.osArch;
+        javaVersion = match.groups.javaVersion;
+        javaVendor = match.groups.javaVendor;
     }
 
     const index = `${cfProperties.country}-${cfProperties.city}-${cfProperties.postalCode}`;
@@ -53,7 +57,9 @@ export async function sendToAnalytics(request: Request, env: Env) {
             cfProperties.regionCode as string,
             cfProperties.timezone as string,
             jbangVersion as string,
-            osInfo as string,
+            osName as string,
+            osVersion as string,
+            osArch as string,
             javaVersion as string,
             javaVendor as string,
             ip as string,
