@@ -37,6 +37,10 @@ export async function sendToAnalytics(request: Request, env: Env) {
     var javaVersion = '';
     var javaVendor = '';
 
+    // Java-http-client/17.0.13  (these are probably from maven/gradle etc.)
+    const javaClientRegex = /Java-http-client\/(?<javaVersion>[^\/]+)/;
+    const javaClientMatch = ua.match(javaClientRegex);
+
     if (match && match.groups) {
         jbangVersion = match.groups.jbangVersion;
         osName = match.groups.osName;
@@ -44,6 +48,8 @@ export async function sendToAnalytics(request: Request, env: Env) {
         osArch = match.groups.osArch;
         javaVersion = match.groups.javaVersion;
         javaVendor = match.groups.javaVendor;
+    } else if (javaClientMatch && javaClientMatch.groups) {
+        javaVersion = javaClientMatch.groups.javaVersion;
     }
 
     const index = `${cfProperties.country}-${cfProperties.city}-${cfProperties.postalCode}`;
