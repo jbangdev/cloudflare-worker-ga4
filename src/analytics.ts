@@ -25,7 +25,7 @@ export async function sendToAnalytics(request: Request, env: Env) {
     // JBang/0.117.1 (Linux/5.10.201-191.748.amzn2.x86_64/amd64) Java/17.0.12/Eclipse Adoptium
     const ua = request.headers.get('user-agent') || ''
     // use regex to check if ua is JBang and grab the jbang version, os info and java version with named groups
-    const uaRegex = /JBang\/(?<jbangVersion>\d+\.\d+\.\d+) \((?<osName>[^\/]+)\/(?<osVersion>[^\/]+)\/(?<osArch>[^)]+)\) Java\/(?<javaVersion>\d+\.\d+\.\d+)\/(?<javaVendor>.+)/;
+    const uaRegex = /JBang\/(?<jbangVersion>\d+\.\d+\.\d+) \((?<osName>[^\/]+)\/(?<osVersion>[^\/]+)\/(?<osArch>[^)]+)\) Java\/(?<javaVersion>[^\/]+)\/(?<javaVendor>.+)/;
     const match = ua.match(uaRegex);
 
     var ip = request.headers.get('CF-Connecting-IP') || '';
@@ -49,22 +49,22 @@ export async function sendToAnalytics(request: Request, env: Env) {
     const index = `${cfProperties.country}-${cfProperties.city}-${cfProperties.postalCode}`;
     const dataPoint = {
         'blobs': [
-            request.url,
-            cfProperties.city as string,
-            cfProperties.country as string,
-            cfProperties.continent as string,
-            cfProperties.region as string,
-            cfProperties.regionCode as string,
-            cfProperties.timezone as string,
-            jbangVersion as string,
-            osName as string,
-            osVersion as string,
-            osArch as string,
-            javaVersion as string,
-            javaVendor as string,
-            ip as string,
-            cfProperties.asOrganization as string,
-            ua as string
+            request.url, // 1
+            cfProperties.city as string, // 2
+            cfProperties.country as string, // 3
+            cfProperties.continent as string, // 4
+            cfProperties.region as string, // 5
+            cfProperties.regionCode as string, // 6
+            cfProperties.timezone as string, // 7
+            jbangVersion as string, // 8
+            osName as string, // 9
+            osVersion as string, // 10
+            osArch as string, // 11
+            javaVersion as string, // 12
+            javaVendor as string, // 13
+            ip as string, // 14
+            cfProperties.asOrganization as string, // 15
+            ua as string // 16
         ],
         'doubles': [
             cfProperties.metroCode as number,
